@@ -1,12 +1,9 @@
 ﻿namespace Mlpp.Domain.Product.Events
 {
-    public class ProductNameChanged
+    public class ProductNameChanged : ProductEvent
     {
-        public ProductNameChanged(ProductAggregate product)
+        public ProductNameChanged(ProductAggregate product) : base(product)
         {
-            Product = product;
         }
-
-        public ProductAggregate Product { get; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using Mlpp.Infrastructure.Utility;
 
 namespace Mlpp.Infrastructure.Storage
 {
@@ -12,12 +11,7 @@ namespace Mlpp.Infrastructure.Storage
                 return null;
             }
 
-            return (TAggregate)Activator.CreateInstance(
-                typeof(TAggregate),
-                BindingFlags.Public | BindingFlags.Instance,
-                null,
-                state,
-                null);
+            return Reflector.CreateInstance<TAggregate>(state);
         }
     }
 }

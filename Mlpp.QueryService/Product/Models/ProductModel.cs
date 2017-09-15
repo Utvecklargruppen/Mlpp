@@ -6,5 +6,6 @@ namespace Mlpp.QueryService.Product.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public bool Removed { get; set; }
     }
 }

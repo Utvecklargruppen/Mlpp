@@ -46,6 +46,18 @@ namespace Mlpp.Domain.Product
             DomainEvents.Raise(new ProductNameChanged(this));
         }
 
+        public void Remove()
+        {
+            if (_state.Removed)
+            {
+                throw new DomainValidationException("Product already removed.");
+            }
+
+            _state.Removed = true;
+
+            DomainEvents.Raise(new ProductRemoved(this));
+        }
+
         public void AddPart(Part part)
         {
             if (_state.Parts.Any(x => x.Name == part.Name))

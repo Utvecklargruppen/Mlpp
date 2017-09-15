@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mlpp.Domain\Mlpp.Domain.csproj" />
+    <ProjectReference Include="..\Mlpp.Toolkit\Mlpp.Toolkit.csproj" />
   </ItemGroup>
 
 </Project>

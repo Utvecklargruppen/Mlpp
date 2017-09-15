@@ -11,6 +11,7 @@ namespace Mlpp.Domain.Product.States
         [Key]
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public bool Removed { get; set; }
 
         private ICollection<PartState> _parts;
         public ICollection<PartState> Parts

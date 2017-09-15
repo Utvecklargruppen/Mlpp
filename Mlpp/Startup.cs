@@ -14,6 +14,7 @@ using Mlpp.Infrastructure.Storage.Mlpp;
 using Mlpp.Infrastructure.Storage.Mlpp.Repository;
 using Mlpp.QueryService.Product;
 using System.Net;
+using Mlpp.Toolkit;
 
 namespace Mlpp
 {
@@ -66,9 +67,16 @@ namespace Mlpp
                     options.Run(
                         async context =>
                         {
-                            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                            context.Response.ContentType = "text/html";
                             var ex = context.Features.Get<IExceptionHandlerFeature>();
+                            if (ex.Error is ValidationException)
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            }
+                            else
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                            }
+
                             await context.Response.WriteAsync(ex.Error.Message).ConfigureAwait(false);
                         });
                 }

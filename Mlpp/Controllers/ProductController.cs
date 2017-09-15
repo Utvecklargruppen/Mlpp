@@ -3,9 +3,6 @@ using Mlpp.ApplicationService.Product;
 using Mlpp.ApplicationService.Product.Command;
 using Mlpp.QueryService.Product;
 using System;
-using Microsoft.EntityFrameworkCore;
-using Mlpp.Domain.Product.States;
-using Mlpp.Infrastructure.Storage.Mlpp;
 
 namespace Mlpp.Controllers
 {
@@ -14,13 +11,11 @@ namespace Mlpp.Controllers
     {
         private readonly IProductService _productService;
         private readonly IProductQueryService _productQueryService;
-        private readonly MlppContext _context;
 
-        public ProductController(MlppContext context, IProductService productService, IProductQueryService productQuerytService)
+        public ProductController(IProductService productService, IProductQueryService productQuerytService)
         {
             _productService = productService;
             _productQueryService = productQuerytService;
-            _context = context;
         }
 
         [HttpGet]
@@ -39,10 +34,9 @@ namespace Mlpp.Controllers
         public IActionResult Post([FromBody]string name)
         {
             var id = Guid.NewGuid();
+
             _productService.When(new CreateProduct(id, name));
-            //_context.Products.Add(new ProductState { Id = id, Name = "hejhopp"});
-            //_context.SetEntityState(new ProductState { Id = id, Name = "hejhopp" }, EntityState.Added);
-            _context.SaveChanges();
+
             return CreatedAtAction("Post", id);
         }
 
@@ -52,10 +46,10 @@ namespace Mlpp.Controllers
             _productService.When(new ChangeProductName(id.GetValueOrDefault(), name));
         }
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Guid? id)
         {
+            _productService.When(new RemoveProduct(id.GetValueOrDefault()));
         }
     }
 }

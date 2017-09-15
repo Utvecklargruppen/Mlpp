@@ -34,17 +34,8 @@ namespace Mlpp.ApplicationService
 
         private void ExecuteInternal<TCommand>(TCommand cmd, Action operation)
         {
-            try
-            {
-                operation();
-
-                _uow.Save();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Command " + nameof(cmd) + " caused exception " + e.Message);
-                throw new ApplicationServiceException(e.Message);
-            }
+            operation();
+            _uow.Save();
         }
     }
 }

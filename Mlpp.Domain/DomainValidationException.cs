@@ -1,10 +1,9 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using Mlpp.Toolkit;
+using System;
 
 namespace Mlpp.Domain
 {
-    [Serializable]
-    public class DomainValidationException : Exception
+    public class DomainValidationException : ValidationException
     {
         public DomainValidationException()
         {
@@ -15,12 +14,6 @@ namespace Mlpp.Domain
         }
 
         public DomainValidationException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected DomainValidationException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
         {
         }
     }   

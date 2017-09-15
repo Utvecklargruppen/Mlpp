@@ -21,7 +21,6 @@ namespace Mlpp.ApplicationService.Product
             Execute(command, () =>
             {
                 var product = new ProductAggregate(command.Id, command.Name);
-
                 _repo.Insert(product);
             });
         }
@@ -29,6 +28,11 @@ namespace Mlpp.ApplicationService.Product
         public void When(ChangeProductName command)
         {
             Execute(command, product => product.SetName(command.Name));
+        }
+
+        public void When(RemoveProduct command)
+        {
+            Execute(command, product => product.Remove());
         }
     }
 }

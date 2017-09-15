@@ -11,9 +11,10 @@ using System;
 namespace Mlpp.Migrations
 {
     [DbContext(typeof(MlppContext))]
-    partial class MlppContextModelSnapshot : ModelSnapshot
+    [Migration("20170915125753_Removed")]
+    partial class Removed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
