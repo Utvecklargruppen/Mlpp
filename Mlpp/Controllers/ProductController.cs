@@ -12,10 +12,10 @@ namespace Mlpp.Controllers
         private readonly IProductService _productService;
         private readonly IProductQueryService _productQueryService;
 
-        public ProductController(IProductService productService, IProductQueryService productQuerytService)
+        public ProductController(IProductService productService, IProductQueryService productQueryService)
         {
             _productService = productService;
-            _productQueryService = productQuerytService;
+            _productQueryService = productQueryService;
         }
 
         [HttpGet]
