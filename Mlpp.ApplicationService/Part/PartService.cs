@@ -5,32 +5,46 @@ using System;
 
 namespace Mlpp.ApplicationService.Part
 {
-    public class PartService : BaseApplicationService<PartAggregate, Guid>, IPartService
+    public class PartService : IPartService
     {
         private readonly IPartRepository _partRepo;
 
-        public PartService(IMlppUnitOfWork uow, IPartRepository partRepo) : base(uow, partRepo)
+        public PartService(IMlppUnitOfWork uow, IPartRepository partRepo)
         {
             _partRepo = partRepo;
         }
 
         public void When(CreatePart command)
         {
-            Execute(command, () =>
+            if (command == null)
             {
-                var part = new PartAggregate(command.AggregateId, command.Name);
-                _partRepo.Insert(part);
-            });
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            var part = new PartAggregate(command.AggregateId, command.Name);
+            _partRepo.Insert(part);
         }
 
         public void When(RemovePart command)
         {
-            Execute(command, part => part.Remove());
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            var part = _partRepo.GetById(command.AggregateId);
+            part.Remove();
         }
 
         public void When(ChangePartName command)
         {
-            Execute(command, part => part.SetName(command.Name));
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            var part = _partRepo.GetById(command.AggregateId);
+            part.SetName(command.Name);
         }
     }
 }
