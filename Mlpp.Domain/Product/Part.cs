@@ -1,6 +1,6 @@
-﻿using Mlpp.Domain.Product.Events;
-using Mlpp.Domain.Product.States;
-using Mlpp.Domain;
+﻿using System;
+using Mlpp.Domain.Part.State;
+using Mlpp.Domain.Product.State;
 
 namespace Mlpp.Domain.Product
 {
@@ -8,26 +8,13 @@ namespace Mlpp.Domain.Product
     {
         private readonly PartState _state;
 
-        public Part(string name)
+        public Part(PartState state)
         {
-            _state = new PartState();
-
-            SetName(name);
+            _state = state ?? throw new ArgumentNullException(nameof(state));
         }
 
+        public Guid Id => _state.Id;
         public string Name => _state.Name;
-
-        public void SetName(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new DomainValidationException("Part name is required.");
-            }
-
-            _state.Name = name;
-
-            DomainEvents.Raise(new PartNameChanged(this));
-        }
 
         public PartState GetInternalState()
         {

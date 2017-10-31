@@ -2,13 +2,10 @@
 
 namespace Mlpp.ApplicationService.Product.Command
 {
-    public class RemoveProduct : IAggregateCommand<Guid>
+    public class RemoveProduct : ProductCommand
     {
-        public RemoveProduct(Guid id)
+        public RemoveProduct(Guid id) : base(id)
         {
-            Id = id;
         }
-
-        public Guid Id { get; }
     }
 }

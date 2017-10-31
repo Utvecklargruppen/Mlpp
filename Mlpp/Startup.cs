@@ -7,14 +7,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Mlpp.ApplicationService.Part;
 using Mlpp.ApplicationService.Product;
+using Mlpp.Domain.Part;
 using Mlpp.Domain.Product;
 using Mlpp.Infrastructure.Storage;
 using Mlpp.Infrastructure.Storage.Mlpp;
 using Mlpp.Infrastructure.Storage.Mlpp.Repository;
+using Mlpp.QueryService.Part;
 using Mlpp.QueryService.Product;
-using System.Net;
 using Mlpp.Toolkit;
+using System.Net;
 
 namespace Mlpp
 {
@@ -24,37 +27,14 @@ namespace Mlpp
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
         }
 
         public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // Add framework services.
-            services.AddMvc();
-
-            services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<IProductRepository, ProductRepository>();
-
-            services.AddTransient<IAggregateFactory, AggregateFactory>();
-            services.AddTransient<IReadOnlyMlppContext, ReadOnlyMlppContext>();
-            services.AddTransient<IUnitOfWork<MlppContext>, UnitOfWork<MlppContext>>();
-            
-            services.AddTransient<IProductQueryService, ProductQueryService>();
-
-            // db
-            var connectionString = Configuration["Database:ConnectionString"];
-            services.AddDbContext<MlppContext>(options => options.UseSqlServer(connectionString));
-
-            // automapper
-            services.AddAutoMapper(x => x.AddProfiles("Mlpp.QueryService"));
-        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -63,7 +43,8 @@ namespace Mlpp
             loggerFactory.AddDebug();
 
             app.UseExceptionHandler(
-                options => {
+                options =>
+                {
                     options.Run(
                         async context =>
                         {
@@ -83,6 +64,30 @@ namespace Mlpp
             );
 
             app.UseMvc();
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Add framework services.
+            services.AddMvc();
+
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IProductQueryService, ProductQueryService>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+
+            services.AddTransient<IPartService, PartService>();
+            services.AddTransient<IPartQueryService, PartQueryService>();
+            services.AddTransient<IPartRepository, PartRepository>();
+
+            // db
+            services.AddDbContext<MlppContext>(options => options.UseSqlServer(Configuration["Database:ConnectionString"]));
+            services.AddTransient<IAggregateFactory, AggregateFactory>();
+            services.AddTransient<IReadOnlyMlppContext, ReadOnlyMlppContext>();
+            services.AddTransient<IMlppUnitOfWork, MlppUnitOfWork>();
+
+            // automapper
+            services.AddAutoMapper(x => x.AddProfiles("Mlpp.QueryService"));
         }
     }
 }

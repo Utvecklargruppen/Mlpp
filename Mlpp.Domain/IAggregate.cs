@@ -1,6 +1,6 @@
 ﻿namespace Mlpp.Domain
 {
-    public interface IAggregate<TState, TId> : IStateObject<TState>
+    public interface IAggregate<out TState, out TId> : IStateObject<TState>
     {
         TId Id { get; }
     }

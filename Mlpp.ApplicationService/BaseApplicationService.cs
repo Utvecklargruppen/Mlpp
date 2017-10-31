@@ -1,14 +1,14 @@
 ﻿using System;
 using Mlpp.Domain;
-using Mlpp.Infrastructure.Storage;
+using Mlpp.Infrastructure.Storage.Mlpp;
 
 namespace Mlpp.ApplicationService
 {
-    public abstract class BaseApplicationService<TContext, TAggregate, TId>
+    public abstract class BaseApplicationService<TAggregate, TId>
     {
-        private readonly IUnitOfWork<TContext> _uow;
+        private readonly IMlppUnitOfWork _uow;
 
-        protected BaseApplicationService(IUnitOfWork<TContext> uow, IReadableRepository<TAggregate, TId> repo)
+        protected BaseApplicationService(IMlppUnitOfWork uow, IReadableRepository<TAggregate, TId> repo)
         {
             _uow = uow;
             Repo = repo;
@@ -18,16 +18,22 @@ namespace Mlpp.ApplicationService
 
         protected void Execute<TCommand>(TCommand cmd, Action operation)
         {
-            if (cmd == null) throw new ArgumentNullException();
+            if (cmd == null)
+            {
+                throw new ArgumentNullException();
+            }
 
             ExecuteInternal(cmd, operation);
         }
 
         protected void Execute<TCommand>(TCommand cmd, Action<TAggregate> operation) where TCommand : IAggregateCommand<TId>
         {
-            if (cmd == null) throw new ArgumentNullException();
+            if (cmd == null)
+            {
+                throw new ArgumentNullException();
+            }
 
-            var aggregate = Repo.SafeGetById(cmd.Id);
+            var aggregate = Repo.SafeGetById(cmd.AggregateId);
 
             ExecuteInternal(cmd, () => operation(aggregate));
         }

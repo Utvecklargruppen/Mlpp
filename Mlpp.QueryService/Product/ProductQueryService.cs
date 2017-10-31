@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Mlpp.Domain.Product.States;
+using Mlpp.Domain.Part.State;
+using Mlpp.Domain.Product.State;
 using Mlpp.Infrastructure.Storage.Mlpp;
 using Mlpp.QueryService.Product.Models;
 using Mlpp.QueryService.Product.Queries;
@@ -17,6 +18,16 @@ namespace Mlpp.QueryService.Product
         public ProductModel GetProductById(Guid id)
         {
             return Execute<ProductModel, ProductState>(new GetProductById(id));
+        }
+
+        public IEnumerable<PartModel> GetProductPart(Guid productId, Guid partId)
+        {
+            return Execute<PartModel, PartState>(new GetProductPart(productId, partId));
+        }
+
+        public IEnumerable<PartModel> GetProductParts(Guid productId)
+        {
+            return Execute<PartModel, PartState>(new GetProductParts(productId));
         }
 
         public IEnumerable<ProductModel> GetProducts()

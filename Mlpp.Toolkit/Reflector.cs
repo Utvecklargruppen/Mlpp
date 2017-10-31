@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Mlpp.Infrastructure.Utility
+namespace Mlpp.Toolkit
 {
     public static class Reflector
     {

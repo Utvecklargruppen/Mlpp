@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Mlpp.Domain.Product.States;
+﻿using Microsoft.EntityFrameworkCore;
+using Mlpp.Domain.Part.State;
+using Mlpp.Domain.Product.State;
+using System.Linq;
 
 namespace Mlpp.Infrastructure.Storage.Mlpp
 {
@@ -12,6 +13,10 @@ namespace Mlpp.Infrastructure.Storage.Mlpp
         {
             _context = context;
         }
+
+        public IQueryable<PartState> Parts => _context.Parts.AsNoTracking();
+
+        public IQueryable<ProductPartState> ProductParts => _context.ProductParts.AsNoTracking();
 
         public IQueryable<ProductState> Products => _context.Products.AsNoTracking();
     }

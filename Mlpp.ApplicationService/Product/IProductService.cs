@@ -7,5 +7,7 @@ namespace Mlpp.ApplicationService.Product
         void When(CreateProduct command);
         void When(ChangeProductName command);
         void When(RemoveProduct command);
+        void When(AddPart command);
+        void When(RemovePart command);
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace Mlpp.QueryService.Product.Models
+﻿using System;
+
+namespace Mlpp.QueryService.Product.Models
 {
     public class PartModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

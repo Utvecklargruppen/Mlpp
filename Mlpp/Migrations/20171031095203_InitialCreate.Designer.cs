@@ -11,8 +11,8 @@ using System;
 namespace Mlpp.Migrations
 {
     [DbContext(typeof(MlppContext))]
-    [Migration("20170915125753_Removed")]
-    partial class Removed
+    [Migration("20171031095203_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,23 +21,7 @@ namespace Mlpp.Migrations
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Mlpp.Domain.Product.States.PartState", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<Guid?>("ProductStateId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductStateId");
-
-                    b.ToTable("Part");
-                });
-
-            modelBuilder.Entity("Mlpp.Domain.Product.States.ProductState", b =>
+            modelBuilder.Entity("Mlpp.Domain.Part.State.PartState", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -48,14 +32,47 @@ namespace Mlpp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Parts");
                 });
 
-            modelBuilder.Entity("Mlpp.Domain.Product.States.PartState", b =>
+            modelBuilder.Entity("Mlpp.Domain.Product.State.ProductPartState", b =>
                 {
-                    b.HasOne("Mlpp.Domain.Product.States.ProductState")
+                    b.Property<Guid>("ProductId");
+
+                    b.Property<Guid>("PartId");
+
+                    b.HasKey("ProductId", "PartId");
+
+                    b.HasIndex("PartId");
+
+                    b.ToTable("ProductParts");
+                });
+
+            modelBuilder.Entity("Mlpp.Domain.Product.State.ProductState", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("Removed");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Mlpp.Domain.Product.State.ProductPartState", b =>
+                {
+                    b.HasOne("Mlpp.Domain.Part.State.PartState", "Part")
+                        .WithMany("Products")
+                        .HasForeignKey("PartId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Mlpp.Domain.Product.State.ProductState", "Product")
                         .WithMany("Parts")
-                        .HasForeignKey("ProductStateId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

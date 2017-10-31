@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Mlpp.Domain.Part;
 using Mlpp.Domain.Product.Events;
-using Mlpp.Domain.Product.States;
+using Mlpp.Domain.Product.State;
 
 namespace Mlpp.Domain.Product
 {
@@ -32,6 +33,7 @@ namespace Mlpp.Domain.Product
         }
 
         public Guid Id => _state.Id;
+
         public string Name => _state.Name;
 
         public void SetName(string name)
@@ -58,16 +60,48 @@ namespace Mlpp.Domain.Product
             DomainEvents.Raise(new ProductRemoved(this));
         }
 
-        public void AddPart(Part part)
+        public void AddPart(PartAggregate part)
         {
-            if (_state.Parts.Any(x => x.Name == part.Name))
+            if (part == null)
             {
-                throw new DomainValidationException($"Part {part.Name} already exists.");
+                throw new ArgumentNullException(nameof(part));
             }
 
-            _state.Parts.Add(part.GetInternalState());
+            _state.Parts.Add(new ProductPartState
+            {
+                ProductId = Id,
+                Product = GetInternalState(),
+                PartId = part.Id,
+                Part = part.GetInternalState()
+            });
 
             DomainEvents.Raise(new PartAdded(this, part));
+        }
+
+        public void RemovePart(Part part)
+        {
+            if (part == null)
+            {
+                throw new ArgumentNullException(nameof(part));   
+            }
+
+            var existing = SafeGetPart(part.Id);
+
+            var productPartState = _state.Parts.Single(x => x.PartId == part.Id);
+            _state.Parts.Remove(productPartState);
+
+            DomainEvents.Raise(new PartRemoved(this, existing));
+        }
+
+        public Part SafeGetPart(Guid partId)
+        {
+            var productPartState = _state.Parts.Select(x => x.Part).SingleOrDefault(x => x.Id == partId);
+            if (productPartState == null)
+            {
+                throw new DomainValidationException($"Product does not have a part with id {partId}.");
+            }
+
+            return new Part(productPartState);
         }
 
         public ProductState GetInternalState()

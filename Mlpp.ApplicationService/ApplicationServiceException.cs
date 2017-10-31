@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Mlpp.ApplicationService
 {
     [Serializable]
-    public class ApplicationServiceException : System.Exception
+    public class ApplicationServiceException : Exception
     {
         public ApplicationServiceException()
         {
@@ -13,14 +14,14 @@ namespace Mlpp.ApplicationService
         {
         }
 
-        public ApplicationServiceException(string message, System.Exception inner) : base(message, inner)
+        public ApplicationServiceException(string message, Exception inner) : base(message, inner)
         {
         }
 
         protected ApplicationServiceException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context)
+            SerializationInfo info,
+            StreamingContext context) : base(info, context)
         {
         }
-    }   
+    }
 }

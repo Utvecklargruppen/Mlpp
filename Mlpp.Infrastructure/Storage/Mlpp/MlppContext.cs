@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Mlpp.Domain.Product.States;
+using Mlpp.Domain.Part.State;
+using Mlpp.Domain.Product.State;
+using Mlpp.Infrastructure.Storage.Mlpp.Configuration;
 
 namespace Mlpp.Infrastructure.Storage.Mlpp
 {
@@ -9,21 +11,28 @@ namespace Mlpp.Infrastructure.Storage.Mlpp
         {
         }
 
-        public DbSet<ProductState> Products { get; set; }
+        public DbSet<PartState> Parts { get; set; }
 
-        public void SetEntityState(object entity, EntityState state)
-        {
-            Entry(entity).State = state;
-        }
+        public DbSet<ProductPartState> ProductParts { get; set; }
+
+        public DbSet<ProductState> Products { get; set; }
 
         public EntityState GetEntityState(object entity)
         {
             return Entry(entity).State;
         }
 
-        public new void Dispose()
+        public void SetEntityState(object entity, EntityState state)
         {
-            base.Dispose();
+            Entry(entity).State = state;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new PartConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductPartConfiguration());
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

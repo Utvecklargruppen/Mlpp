@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Mlpp.Infrastructure.Storage
 {
-    public interface IContext : IDisposable
+    public interface IContext
     {
         int SaveChanges();
         DbSet<T> Set<T>() where T : class;

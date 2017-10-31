@@ -1,25 +1,17 @@
-﻿using System;
-
-namespace Mlpp.Infrastructure.Storage
+﻿namespace Mlpp.Infrastructure.Storage
 {
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext>
-        where TContext : IDisposable, IContext
+    public abstract class UnitOfWork : IUnitOfWork
     {
-        public UnitOfWork(TContext context)
-        {
-            Context = context;
-        }
+        private readonly IContext _context;
 
-        public TContext Context { get; }
-
-        public void Dispose()
+        protected UnitOfWork(IContext context)
         {
-            Context.Dispose();
+            _context = context;
         }
 
         public int Save()
         {
-            return Context.SaveChanges();
+            return _context.SaveChanges();
         }
     }
 }

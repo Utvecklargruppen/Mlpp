@@ -1,7 +1,7 @@
 ﻿namespace Mlpp.ApplicationService
 {
-    public interface IAggregateCommand<TId>
+    public interface IAggregateCommand<out TId> : ICommand
     {
-        TId Id { get; }
+        TId AggregateId { get; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Mlpp.Domain.Product;
-using Mlpp.Domain.Product.States;
+using Mlpp.Domain.Product.State;
 using System;
 
 namespace Mlpp.Infrastructure.Storage.Mlpp.Repository

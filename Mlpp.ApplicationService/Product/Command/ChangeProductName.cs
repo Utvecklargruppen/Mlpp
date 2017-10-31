@@ -1,17 +1,14 @@
 ﻿using System;
-using Mlpp.ApplicationService;
 
 namespace Mlpp.ApplicationService.Product.Command
 {
-    public class ChangeProductName : IAggregateCommand<Guid>
+    public class ChangeProductName : ProductCommand
     {
-        public ChangeProductName(Guid id, string name)
+        public ChangeProductName(Guid id, string name) : base(id)
         {
-            Id = id;
             Name = name;
         }
 
-        public Guid Id { get; }
         public string Name { get; }
     }
 }

@@ -2,15 +2,13 @@
 
 namespace Mlpp.ApplicationService.Product.Command
 {
-    public class CreateProduct : IAggregateCommand<Guid>
+    public class CreateProduct : ProductCommand
     {
-        public CreateProduct(Guid id, string name)
+        public CreateProduct(Guid id, string name) : base(id)
         {
-            Id = id;
             Name = name;
         }
 
-        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

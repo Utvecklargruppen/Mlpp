@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Mlpp.Domain.Product.States;
+using Mlpp.Domain.Part.State;
+using Mlpp.Domain.Product.State;
 using Mlpp.QueryService.Product.Models;
 
 namespace Mlpp.QueryService.Product

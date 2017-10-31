@@ -8,5 +8,7 @@ namespace Mlpp.QueryService.Product
     {
         ProductModel GetProductById(Guid id);
         IEnumerable<ProductModel> GetProducts();
+        IEnumerable<PartModel> GetProductPart(Guid productId, Guid partId);
+        IEnumerable<PartModel> GetProductParts(Guid productId);
     }
 }

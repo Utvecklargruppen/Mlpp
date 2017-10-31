@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace Mlpp.Infrastructure.Storage
+﻿namespace Mlpp.Infrastructure.Storage
 {
-    public interface IUnitOfWork<out TContext> : IDisposable
+    public interface IUnitOfWork
     {
-        TContext Context { get; }
         int Save();
     }
 }

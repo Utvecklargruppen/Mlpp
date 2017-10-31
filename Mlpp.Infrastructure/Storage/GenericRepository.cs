@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mlpp.Domain;
+using System;
 
 namespace Mlpp.Infrastructure.Storage
 {
@@ -10,17 +11,38 @@ namespace Mlpp.Infrastructure.Storage
     {
         protected GenericRepository(TContext context, IAggregateFactory aggregateFactory)
         {
-            Context = context;
+            Context = context; 
             Factory = aggregateFactory;
         }
 
-        protected IAggregateFactory Factory { get; }
         protected TContext Context { get; }
+        protected IAggregateFactory Factory { get; }
+
+        public virtual void Delete(TAggregate aggregate)
+        {
+            if (aggregate == null)
+            {
+                throw new ArgumentNullException(nameof(aggregate));
+            }
+
+            var set = Context.Set<TState>();
+            set.Remove(aggregate.GetInternalState());
+        }
 
         public virtual TAggregate GetById(TId id)
         {
             var set = Context.Set<TState>();
             return CreateAggregate(set.Find(id));
+        }
+
+        public virtual void Insert(TAggregate aggregate)
+        {
+            if (aggregate == null)
+            {
+                throw new ArgumentNullException(nameof(aggregate));
+            }
+
+            Context.SetEntityState(aggregate.GetInternalState(), EntityState.Added);
         }
 
         public virtual TAggregate SafeGetById(TId id)
@@ -29,36 +51,19 @@ namespace Mlpp.Infrastructure.Storage
             var aggregate = CreateAggregate(set.Find(id));
             if (aggregate == null)
             {
-                throw new NotFoundException($"No aggregate with id {id} could be found.");
+                throw new AggregateNotFoundException($"No aggregate with id {id} could be found.");
             }
-
             return aggregate;
-        }
-
-        public virtual void Insert(TAggregate aggregate)
-        {
-            Context.SetEntityState(aggregate.GetInternalState(), EntityState.Added);
         }
 
         public virtual void Update(TAggregate aggregate)
         {
-            Context.SetEntityState(aggregate.GetInternalState(), EntityState.Modified);
-        }
-
-        public virtual void Delete(TId aggregateId)
-        {
-            var set = Context.Set<TState>();
-            var state = set.Find(aggregateId);
-            if (state != null)
+            if (aggregate == null)
             {
-                set.Remove(state);
+                throw new ArgumentNullException(nameof(aggregate));
             }
-        }
 
-        public virtual void Delete(TAggregate aggregate)
-        {
-            var set = Context.Set<TState>();
-            set.Remove(aggregate.GetInternalState());
+            Context.SetEntityState(aggregate.GetInternalState(), EntityState.Modified);
         }
 
         protected virtual TAggregate CreateAggregate(TState state)
@@ -67,4 +72,3 @@ namespace Mlpp.Infrastructure.Storage
         }
     }
 }
-

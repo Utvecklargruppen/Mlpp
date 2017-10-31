@@ -1,4 +1,4 @@
-﻿using Mlpp.Domain.Product.States;
+﻿using Mlpp.Domain.Product.State;
 using Mlpp.Infrastructure.Storage.Mlpp;
 using System;
 using System.Linq;
